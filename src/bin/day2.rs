@@ -58,12 +58,12 @@ fn id_has_repeated_digit_sequence(id: &u64) -> bool {
     false
 }
 
-fn invalid_ids_in_range(range: &(u64, u64), predicate: &dyn Fn(&u64) -> bool) -> Vec<u64> {
-    (range.0..=range.1).filter(predicate).collect()
+fn invalid_ids_in_range(range: &(u64, u64), is_invalid: &dyn Fn(&u64) -> bool) -> Vec<u64> {
+    (range.0..=range.1).filter(is_invalid).collect()
 }
 
-fn sum_invalid_ids_in_ranges(ranges: &[(u64, u64)], predicate: &dyn Fn(&u64) -> bool) -> u64 {
-    ranges.iter().flat_map(|range| invalid_ids_in_range(range, predicate)).sum()
+fn sum_invalid_ids_in_ranges(ranges: &[(u64, u64)], is_invalid: &dyn Fn(&u64) -> bool) -> u64 {
+    ranges.iter().flat_map(|range| invalid_ids_in_range(range, is_invalid)).sum()
 }
 
 fn main() {

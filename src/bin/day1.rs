@@ -1,6 +1,6 @@
 use std::fs;
 
-const INPUT_PATH: &str = "src/input.txt";
+const INPUT_PATH: &str = "inputs/1.txt";
 const START_POSITION: i32 = 50;
 const DIAL_SIZE: i32 = 100;
 
@@ -9,7 +9,7 @@ const DIAL_SIZE: i32 = 100;
 /// L23
 /// R234
 /// R43
-/// 
+///
 /// We parse this and return a vector of integers, with positive values being a turn to the right (clockwise)
 /// and negative values to the left.
 fn parse_input(input_path: &str) -> Result<Vec<i32>, String> {
@@ -45,7 +45,13 @@ fn calculate_times_passed_zero(turns: &[i32]) -> u32 {
     let mut passed_zero: u32 = 0;
     turns.iter().for_each(|&degrees| {
         let distance_to_zero = match degrees {
-            d if d < 0 => { if position == 0 { 100 } else { position } },
+            d if d < 0 => {
+                if position == 0 {
+                    100
+                } else {
+                    position
+                }
+            }
             d if d > 0 => DIAL_SIZE - position,
             _ => 100,
         };

@@ -72,5 +72,5 @@ fn main() {
         Err(e) => return println!("Failed with error: {}", e),
     };
     println!("Answer 1 is: {}", sum_invalid_ids_in_ranges(&input, &id_is_invalid_repeated_once));
-    println!("Answer 1 is: {}", sum_invalid_ids_in_ranges(&input, &id_is_invalid_repeated));
+    println!("Answer 2 is: {}", sum_invalid_ids_in_ranges(&input, &id_is_invalid_repeated));
 }

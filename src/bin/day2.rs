@@ -11,7 +11,7 @@ fn parse_input(input_path: &str) -> Result<Vec<(u64, u64)>, String> {
         .map(|range| {
             let mut ids = range.split('-');
             if let (Some(id1), Some(id2), None) = (ids.next(), ids.next(), ids.next()) {
-                return Ok((id1, id2))
+                return Ok((id1, id2));
             }
             Err("Invalid number of IDs found in range")
         })
@@ -63,7 +63,10 @@ fn invalid_ids_in_range(range: &(u64, u64), is_invalid: &dyn Fn(&u64) -> bool) -
 }
 
 fn sum_invalid_ids_in_ranges(ranges: &[(u64, u64)], is_invalid: &dyn Fn(&u64) -> bool) -> u64 {
-    ranges.iter().flat_map(|range| invalid_ids_in_range(range, is_invalid)).sum()
+    ranges
+        .iter()
+        .flat_map(|range| invalid_ids_in_range(range, is_invalid))
+        .sum()
 }
 
 fn main() {
@@ -71,6 +74,12 @@ fn main() {
         Ok(input) => input,
         Err(e) => return println!("Failed with error: {}", e),
     };
-    println!("Answer 1 is: {}", sum_invalid_ids_in_ranges(&input, &id_is_double_sequence));
-    println!("Answer 2 is: {}", sum_invalid_ids_in_ranges(&input, &id_has_repeated_digit_sequence));
+    println!(
+        "Answer 1 is: {}",
+        sum_invalid_ids_in_ranges(&input, &id_is_double_sequence)
+    );
+    println!(
+        "Answer 2 is: {}",
+        sum_invalid_ids_in_ranges(&input, &id_has_repeated_digit_sequence)
+    );
 }

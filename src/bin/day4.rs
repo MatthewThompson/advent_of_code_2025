@@ -4,11 +4,12 @@ const INPUT_PATH: &str = "inputs/4.txt";
 
 /// https://adventofcode.com/2025/day/4
 fn main() {
-    let input = match parse_input(INPUT_PATH) {
+    let mut input = match parse_input(INPUT_PATH) {
         Ok(input) => input,
         Err(e) => return println!("Failed with error: {}", e),
     };
     println!("Answer 1 is: {}", count_accessible_rolls(&input));
+    println!("Answer 1 is: {}", count_accessible_rolls_with_recursive_removal(&mut input));
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -32,6 +33,48 @@ impl Grid {
             width,
             height,
         }
+    }
+
+    fn is_tile_accessible(&self, tile_row: isize, tile_column: isize) -> bool {
+        let mut adjacent_paper = 0;
+        for row in -1..=1 {
+            for col in -1..=1 {
+                if row == 0 && col == 0 {
+                    continue
+                }
+                let neighbour_row = tile_row + row;
+                let neighbour_col = tile_column + col;
+                if neighbour_col as usize >= self.width
+                    || neighbour_col < 0
+                    || neighbour_row as usize >= self.height
+                    || neighbour_row < 0 {
+                    continue;
+                }
+                if let Tile::Paper = self.tiles[(tile_row + row) as usize][(tile_column + col) as usize] {
+                    adjacent_paper += 1;
+                }
+            }
+        }
+        adjacent_paper < 4
+    }
+
+    fn remove_paper(&mut self, tile_row: usize, tile_column: usize) {
+        self.tiles[tile_row][tile_column] = Tile::Empty;
+    }
+
+    fn count_and_remove_accessible_rolls(&mut self) -> u64 {
+        let mut accessible = 0;
+        for row in 0..self.height {
+            for col in 0..self.width {
+                if let Tile::Paper = self.tiles[row][col] {
+                    if self.is_tile_accessible(row as isize, col as isize) {
+                        accessible += 1;
+                        self.remove_paper(row, col);
+                    }
+                }
+            }
+        }
+        accessible
     }
 }
 
@@ -65,7 +108,7 @@ fn count_accessible_rolls(grid: &Grid) -> u64 {
     grid.tiles.iter().enumerate().for_each(|(row_number, row)|{
         row.iter().enumerate().for_each(|(column_number, tile)| {
             if let Tile::Paper = tile {
-                if is_tile_accessible(grid, row_number as isize, column_number as isize) {
+                if grid.is_tile_accessible(row_number as isize, column_number as isize) {
                     accessible += 1;
                 }
             }
@@ -74,25 +117,12 @@ fn count_accessible_rolls(grid: &Grid) -> u64 {
     accessible
 }
 
-fn is_tile_accessible(grid: &Grid, tile_row: isize, tile_column: isize) -> bool {
-    let mut adjacent_paper = 0;
-    for row in -1..=1 {
-        for col in -1..=1 {
-            if row == 0 && col == 0 {
-                continue
-            }
-            let neighbour_row = tile_row + row;
-            let neighbour_col = tile_column + col;
-            if neighbour_col as usize >= grid.width
-                || neighbour_col < 0
-                || neighbour_row as usize >= grid.height
-                || neighbour_row < 0 {
-                continue;
-            }
-            if let Tile::Paper = grid.tiles[(tile_row + row) as usize][(tile_column + col) as usize] {
-                adjacent_paper += 1;
-            }
-        }
+fn count_accessible_rolls_with_recursive_removal(grid: &mut Grid) -> u64 {
+    let mut removed = grid.count_and_remove_accessible_rolls();
+    let mut accessible = removed;
+    while removed > 0 {
+        removed = grid.count_and_remove_accessible_rolls();
+        accessible += removed;
     }
-    adjacent_paper < 4
+    accessible
 }

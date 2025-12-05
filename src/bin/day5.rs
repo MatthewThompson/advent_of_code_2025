@@ -16,16 +16,19 @@ fn main() {
 /// followed by a list of numbers.
 fn parse_input(input_path: &str) -> Result<(Vec<RangeInclusive<u64>>, Vec<u64>), String> {
     let input_text = fs::read_to_string(input_path).map_err(|e| e.to_string())?;
-    let mut parts = input_text.split("\r\n\r\n");
-
-    if let (Some(ranges), Some(ids), None) = (parts.next(), parts.next(), parts.next()) {
-        let ranges = parse_ranges(ranges)?;
-        let ids = parse_ids(ids)?;
-        return Ok((ranges, ids));
+    // Windows only, there's probably an easy way to make it platform independent.
+    let parts: Vec<&str> = input_text.split("\r\n\r\n").collect();
+    match parts.as_slice() {
+        [ranges, ids] => {
+            let ranges = parse_ranges(ranges)?;
+            let ids = parse_ids(ids)?;
+            Ok((ranges, ids))
+        }
+        _ => Err("Invalid number of parts".to_owned())
     }
-    Err("Invalid number of parts".to_owned())
 }
 
+/// Input expected to be a list of new line separated ranges, two positive integers separated by a dash.
 fn parse_ranges(input: &str) -> Result<Vec<RangeInclusive<u64>>, String> {
     input
         .lines()
@@ -46,6 +49,7 @@ fn parse_ranges(input: &str) -> Result<Vec<RangeInclusive<u64>>, String> {
         .collect()
 }
 
+/// Input expected to be a list of new line separated positive integers.
 fn parse_ids(input: &str) -> Result<Vec<u64>, String> {
     input
         .lines()
@@ -53,6 +57,7 @@ fn parse_ids(input: &str) -> Result<Vec<u64>, String> {
         .collect()
 }
 
+/// Returns the number of ids that are in the ranges.
 fn count_ids_in_ranges(ranges: &[RangeInclusive<u64>], ids: &[u64]) -> u64 {
     let mut ids_in_range = 0;
     ids.iter().for_each(|id| {
@@ -101,6 +106,7 @@ fn count_overlapping_ranges_size(mut ranges: Vec<RangeInclusive<u64>>) -> u64 {
     count_non_overlapping_range_size(non_overlapping_ranges)
 }
 
+/// Sums the size of all given inclusive ranges.
 fn count_non_overlapping_range_size(ranges: Vec<RangeInclusive<u64>>) -> u64 {
     let mut ranges_size = 0;
     ranges.iter().for_each(|range| {

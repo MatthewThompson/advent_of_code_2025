@@ -9,7 +9,7 @@ fn main() {
         Err(e) => return println!("Failed with error: {}", e),
     };
     println!("Answer 1 is: {}", count_accessible_rolls(&input));
-    println!("Answer 1 is: {}", count_accessible_rolls_with_recursive_removal(&mut input));
+    println!("Answer 2 is: {}", count_accessible_rolls_with_recursive_removal(&mut input));
 }
 
 #[derive(Clone, Copy, Debug)]

@@ -61,7 +61,11 @@ fn sum_highest_2_digit_joltages(battery_banks: &[Vec<u64>]) -> u64 {
         .sum()
 }
 
-fn get_highest_battery_index_in_range(battery_bank: &[u64], from_start: usize, from_end: usize) -> usize {
+fn get_highest_battery_index_in_range(
+    battery_bank: &[u64],
+    from_start: usize,
+    from_end: usize,
+) -> usize {
     let mut highest = 0;
     let mut index_of_highest = 0;
     battery_bank
@@ -84,7 +88,8 @@ fn get_highest_12_digit_joltage(battery_bank: &[u64]) -> u64 {
         battery_bank,
         0,
         // We always want there to be enough digits left at the end to choose the rest of the batteries
-        remaining as usize);
+        remaining as usize,
+    );
     let mut total: u64 = battery_bank[previous_battery_index] * 10_u64.pow(remaining);
     while remaining > 0 {
         remaining -= 1;
@@ -92,7 +97,8 @@ fn get_highest_12_digit_joltage(battery_bank: &[u64]) -> u64 {
             battery_bank,
             previous_battery_index + 1,
             // We always want there to be enough digits left at the end to choose the rest of the batteries
-            remaining as usize);
+            remaining as usize,
+        );
         total += battery_bank[next_battery_index] * 10_u64.pow(remaining);
         previous_battery_index = next_battery_index;
     }

@@ -9,7 +9,10 @@ fn main() {
         Err(e) => return println!("Failed with error: {}", e),
     };
     println!("Answer 1 is: {}", count_accessible_rolls(&input));
-    println!("Answer 2 is: {}", count_accessible_rolls_with_recursive_removal(&mut input));
+    println!(
+        "Answer 2 is: {}",
+        count_accessible_rolls_with_recursive_removal(&mut input)
+    );
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -40,17 +43,20 @@ impl Grid {
         for row in -1..=1 {
             for col in -1..=1 {
                 if row == 0 && col == 0 {
-                    continue
+                    continue;
                 }
                 let neighbour_row = tile_row + row;
                 let neighbour_col = tile_column + col;
                 if neighbour_col as usize >= self.width
                     || neighbour_col < 0
                     || neighbour_row as usize >= self.height
-                    || neighbour_row < 0 {
+                    || neighbour_row < 0
+                {
                     continue;
                 }
-                if let Tile::Paper = self.tiles[(tile_row + row) as usize][(tile_column + col) as usize] {
+                if let Tile::Paper =
+                    self.tiles[(tile_row + row) as usize][(tile_column + col) as usize]
+                {
                     adjacent_paper += 1;
                 }
             }
@@ -85,14 +91,11 @@ fn parse_input(input_path: &str) -> Result<Grid, String> {
     let tiles = input_text
         .lines()
         .map(|l| {
-            l
-                .chars()
-                .map(|c| {
-                    match c {
-                        '.' => Ok(Tile::Empty),
-                        '@' => Ok(Tile::Paper),
-                        other => Err(format!("Found invalid tile char: {other}")),
-                    }
+            l.chars()
+                .map(|c| match c {
+                    '.' => Ok(Tile::Empty),
+                    '@' => Ok(Tile::Paper),
+                    other => Err(format!("Found invalid tile char: {other}")),
                 })
                 .collect::<Result<Vec<Tile>, String>>()
         })
@@ -105,7 +108,7 @@ fn parse_input(input_path: &str) -> Result<Grid, String> {
 /// adjacent.
 fn count_accessible_rolls(grid: &Grid) -> u64 {
     let mut accessible = 0;
-    grid.tiles.iter().enumerate().for_each(|(row_number, row)|{
+    grid.tiles.iter().enumerate().for_each(|(row_number, row)| {
         row.iter().enumerate().for_each(|(column_number, tile)| {
             if let Tile::Paper = tile {
                 if grid.is_tile_accessible(row_number as isize, column_number as isize) {

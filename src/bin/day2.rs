@@ -49,7 +49,9 @@ fn id_has_repeated_digit_sequence(id: &u64) -> bool {
         }
         let mut chunks = id_str.as_bytes().chunks(sub_sequence_len);
         let first = chunks.next();
-        if let Some(first) = first && chunks.all(|c| c == first) {
+        if let Some(first) = first
+            && chunks.all(|c| c == first)
+        {
             return true;
         }
     }

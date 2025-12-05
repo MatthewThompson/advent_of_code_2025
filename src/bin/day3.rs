@@ -9,8 +9,7 @@ fn parse_input(input_path: &str) -> Result<Vec<Vec<u64>>, String> {
     input_text
         .lines()
         .map(|l| {
-            l
-                .chars()
+            l.chars()
                 .map(|c| {
                     char::to_digit(c, 10)
                         .map(|d| d as u64)

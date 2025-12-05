@@ -73,10 +73,11 @@ impl Grid {
         for row in 0..self.height {
             for col in 0..self.width {
                 if let Tile::Paper = self.tiles[row][col]
-                    && self.is_tile_accessible(row as isize, col as isize) {
-                        accessible += 1;
-                        self.remove_paper(row, col);
-                    }
+                    && self.is_tile_accessible(row as isize, col as isize)
+                {
+                    accessible += 1;
+                    self.remove_paper(row, col);
+                }
             }
         }
         accessible
@@ -110,9 +111,10 @@ fn count_accessible_rolls(grid: &Grid) -> u64 {
     grid.tiles.iter().enumerate().for_each(|(row_number, row)| {
         row.iter().enumerate().for_each(|(column_number, tile)| {
             if let Tile::Paper = tile
-                && grid.is_tile_accessible(row_number as isize, column_number as isize) {
-                    accessible += 1;
-                }
+                && grid.is_tile_accessible(row_number as isize, column_number as isize)
+            {
+                accessible += 1;
+            }
         });
     });
     accessible

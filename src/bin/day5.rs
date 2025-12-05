@@ -63,6 +63,8 @@ fn count_ids_in_ranges(ranges: &[RangeInclusive<u64>], ids: &[u64]) -> u64 {
     ids_in_range
 }
 
+/// Returns the total number of numbers in all the ranges provided. Will not double count a number
+/// if it is in multiple ranges.
 fn count_overlapping_ranges_size(mut ranges: Vec<RangeInclusive<u64>>) -> u64 {
     // Sort the potentially overlapping ranges by their start value ascending.
     ranges.sort_by(|r, r2| r.start().cmp(r2.start()));
@@ -84,14 +86,14 @@ fn count_overlapping_ranges_size(mut ranges: Vec<RangeInclusive<u64>>) -> u64 {
             // Non overlapping, add current range to list and continue
             && next_range.start() <= range_end
         {
-            // Next range overlaps, extend the end of this range.
+            // Merge this range into the current one by extending the range if this one has a larger end.
             if next_range.end() > range_end {
                 range_end = next_range.end();
             }
             maybe_next_range = ranges.next();
         }
         non_overlapping_ranges.push(RangeInclusive::new(*range_start, *range_end));
-        // The next range is either none, or a non overlapping range. Either way we want to star the loop again.
+        // The next range is either none, or a non overlapping range. Either way we want to start the loop again with this range as our starting range.
         current_range = maybe_next_range;
     }
     // If we know none of the ranges overlap we can easily find their total size just by summing

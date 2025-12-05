@@ -1,4 +1,4 @@
-use std::{fs, ops::RangeInclusive};
+use std::{cmp, fs, ops::RangeInclusive};
 
 const INPUT_PATH: &str = "inputs/5.txt";
 
@@ -92,9 +92,7 @@ fn count_overlapping_ranges_size(mut ranges: Vec<RangeInclusive<u64>>) -> u64 {
             && next_range.start() <= range_end
         {
             // Merge this range into the current one by extending the range if this one has a larger end.
-            if next_range.end() > range_end {
-                range_end = next_range.end();
-            }
+            range_end = cmp::max(range_end, next_range.end());
             maybe_next_range = ranges.next();
         }
         non_overlapping_ranges.push(RangeInclusive::new(*range_start, *range_end));
@@ -108,9 +106,5 @@ fn count_overlapping_ranges_size(mut ranges: Vec<RangeInclusive<u64>>) -> u64 {
 
 /// Sums the size of all given inclusive ranges.
 fn count_non_overlapping_range_size(ranges: Vec<RangeInclusive<u64>>) -> u64 {
-    let mut ranges_size = 0;
-    ranges.iter().for_each(|range| {
-        ranges_size += range.end() + 1 - range.start();
-    });
-    ranges_size
+    ranges.iter().map(|range| range.end() + 1 - range.start()).sum()
 }

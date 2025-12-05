@@ -44,7 +44,7 @@ fn id_has_repeated_digit_sequence(id: &u64) -> bool {
     }
     for sub_sequence_len in 1..id_len {
         // Cannot be a repeated sequence if the length is not divisible by the sequence size.
-        if id_len % sub_sequence_len != 0 {
+        if !id_len.is_multiple_of(sub_sequence_len) {
             continue;
         }
         let mut chunks = id_str.as_bytes().chunks(sub_sequence_len);

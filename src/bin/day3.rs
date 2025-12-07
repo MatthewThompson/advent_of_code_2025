@@ -2,6 +2,16 @@ use std::fs;
 
 const INPUT_PATH: &str = "inputs/3.txt";
 
+/// https://adventofcode.com/2025/day/3
+fn main() {
+    let input = match parse_input(INPUT_PATH) {
+        Ok(input) => input,
+        Err(e) => return println!("Failed with error: {}", e),
+    };
+    println!("Answer 1 is: {}", sum_highest_2_digit_joltages(&input));
+    println!("Answer 2 is: {}", sum_highest_12_digit_joltages(&input));
+}
+
 /// The input is a series of lines, each being a list of digits.
 /// We want to convert this into a list of list of numbers.
 fn parse_input(input_path: &str) -> Result<Vec<Vec<u64>>, String> {
@@ -109,13 +119,4 @@ fn sum_highest_12_digit_joltages(battery_banks: &[Vec<u64>]) -> u64 {
         .iter()
         .map(|bank| get_highest_12_digit_joltage(bank))
         .sum()
-}
-
-fn main() {
-    let input = match parse_input(INPUT_PATH) {
-        Ok(input) => input,
-        Err(e) => return println!("Failed with error: {}", e),
-    };
-    println!("Answer 1 is: {}", sum_highest_2_digit_joltages(&input));
-    println!("Answer 2 is: {}", sum_highest_12_digit_joltages(&input));
 }

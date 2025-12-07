@@ -2,6 +2,22 @@ use std::fs;
 
 const INPUT_PATH: &str = "inputs/2.txt";
 
+/// https://adventofcode.com/2025/day/2
+fn main() {
+    let input = match parse_input(INPUT_PATH) {
+        Ok(input) => input,
+        Err(e) => return println!("Failed with error: {}", e),
+    };
+    println!(
+        "Answer 1 is: {}",
+        sum_invalid_ids_in_ranges(&input, &id_is_double_sequence)
+    );
+    println!(
+        "Answer 2 is: {}",
+        sum_invalid_ids_in_ranges(&input, &id_has_repeated_digit_sequence)
+    );
+}
+
 /// Input is a list of comma separated ranges in the format \d+-\d+
 /// e.g. 11-22,95-115,998-1012,1188511880-1188511890
 fn parse_input(input_path: &str) -> Result<Vec<(u64, u64)>, String> {
@@ -67,19 +83,4 @@ fn sum_invalid_ids_in_ranges(ranges: &[(u64, u64)], is_invalid: &dyn Fn(&u64) ->
         .iter()
         .flat_map(|range| invalid_ids_in_range(range, is_invalid))
         .sum()
-}
-
-fn main() {
-    let input = match parse_input(INPUT_PATH) {
-        Ok(input) => input,
-        Err(e) => return println!("Failed with error: {}", e),
-    };
-    println!(
-        "Answer 1 is: {}",
-        sum_invalid_ids_in_ranges(&input, &id_is_double_sequence)
-    );
-    println!(
-        "Answer 2 is: {}",
-        sum_invalid_ids_in_ranges(&input, &id_has_repeated_digit_sequence)
-    );
 }

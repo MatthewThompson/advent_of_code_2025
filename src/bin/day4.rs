@@ -15,6 +15,25 @@ fn main() {
     );
 }
 
+/// The input is a series of lines, containing a list of . (empty) or @ (roll of paper).
+/// We want to convert this into a list of list of numbers.
+fn parse_input(input_path: &str) -> Result<Grid, String> {
+    let input_text = fs::read_to_string(input_path).map_err(|e| e.to_string())?;
+    let tiles = input_text
+        .lines()
+        .map(|l| {
+            l.chars()
+                .map(|c| match c {
+                    '.' => Ok(Tile::Empty),
+                    '@' => Ok(Tile::Paper),
+                    other => Err(format!("Found invalid tile char: {other}")),
+                })
+                .collect::<Result<Vec<Tile>, String>>()
+        })
+        .collect::<Result<Vec<Vec<Tile>>, String>>()?;
+    Ok(Grid::new(tiles))
+}
+
 #[derive(Clone, Copy, Debug)]
 enum Tile {
     Empty,
@@ -82,25 +101,6 @@ impl Grid {
         }
         accessible
     }
-}
-
-/// The input is a series of lines, containing a list of . (empty) or @ (roll of paper).
-/// We want to convert this into a list of list of numbers.
-fn parse_input(input_path: &str) -> Result<Grid, String> {
-    let input_text = fs::read_to_string(input_path).map_err(|e| e.to_string())?;
-    let tiles = input_text
-        .lines()
-        .map(|l| {
-            l.chars()
-                .map(|c| match c {
-                    '.' => Ok(Tile::Empty),
-                    '@' => Ok(Tile::Paper),
-                    other => Err(format!("Found invalid tile char: {other}")),
-                })
-                .collect::<Result<Vec<Tile>, String>>()
-        })
-        .collect::<Result<Vec<Vec<Tile>>, String>>()?;
-    Ok(Grid::new(tiles))
 }
 
 /// Find all the paper rolls in the grid which are accessible. A paper roll is defined as

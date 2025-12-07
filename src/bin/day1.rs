@@ -4,6 +4,16 @@ const INPUT_PATH: &str = "inputs/1.txt";
 const START_POSITION: i32 = 50;
 const DIAL_SIZE: i32 = 100;
 
+/// https://adventofcode.com/2025/day/1
+fn main() {
+    let input = match parse_input(INPUT_PATH) {
+        Ok(input) => input,
+        Err(e) => return println!("Failed with error: {}", e),
+    };
+    println!("Answer 1 is: {}", calculate_times_landed_on_zero(&input));
+    println!("Answer 2 is: {}", calculate_times_passed_zero(&input));
+}
+
 /// Input is a list of directions to turn in the format [LR](\d+)
 /// e.g.
 /// L23
@@ -64,13 +74,4 @@ fn calculate_times_passed_zero(turns: &[i32]) -> u32 {
         position = i32::rem_euclid(position + degrees, DIAL_SIZE);
     });
     passed_zero
-}
-
-fn main() {
-    let input = match parse_input(INPUT_PATH) {
-        Ok(input) => input,
-        Err(e) => return println!("Failed with error: {}", e),
-    };
-    println!("Answer 1 is: {}", calculate_times_landed_on_zero(&input));
-    println!("Answer 2 is: {}", calculate_times_passed_zero(&input));
 }

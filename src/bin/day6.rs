@@ -73,15 +73,14 @@ struct Equation {
 
 impl Equation {
     fn calculate(&self) -> u64 {
-        let mut total = self.initial_value();
-        self.values.iter().for_each(|value| { total = self.operation.apply(total, *value); });
-        total
-    }
-
-    fn initial_value(&self) -> u64 {
-        match self.operation {
-            Operation::Plus => 0,
-            Operation::Multiply => 1,
+        let mut value_iter = self.values.iter();
+        match value_iter.next() {
+            Some(initial) => {
+                let mut total = *initial;
+                value_iter.for_each(|value| { total = self.operation.apply(total, *value); });
+                total
+            },
+            None => 0,
         }
     }
 }

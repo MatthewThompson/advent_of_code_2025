@@ -24,7 +24,7 @@ fn parse_input(input_path: &str) -> Result<(Vec<RangeInclusive<u64>>, Vec<u64>),
             let ids = parse_ids(ids)?;
             Ok((ranges, ids))
         }
-        _ => Err("Invalid number of parts".to_owned())
+        _ => Err("Invalid number of parts".to_owned()),
     }
 }
 
@@ -106,5 +106,8 @@ fn count_overlapping_ranges_size(mut ranges: Vec<RangeInclusive<u64>>) -> u64 {
 
 /// Sums the size of all given inclusive ranges.
 fn count_non_overlapping_range_size(ranges: Vec<RangeInclusive<u64>>) -> u64 {
-    ranges.iter().map(|range| range.end() + 1 - range.start()).sum()
+    ranges
+        .iter()
+        .map(|range| range.end() + 1 - range.start())
+        .sum()
 }

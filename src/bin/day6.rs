@@ -62,7 +62,7 @@ fn parse_operation_row(row: &str) -> Result<Vec<Operation>, String> {
         .collect()
 }
 
-/// ...
+/// Reading digits top to bottom instead of left to right. Each different equation is separated by a single empty space column.
 fn parse_input_columns(input_path: &str) -> Result<Vec<Equation>, String> {
     let input_text = fs::read_to_string(input_path).map_err(|e| e.to_string())?;
     let mut equations = vec![];
@@ -124,17 +124,18 @@ struct Equation {
 
 impl Equation {
     fn calculate(&self) -> u64 {
-        let mut value_iter = self.values.iter();
-        match value_iter.next() {
-            Some(initial) => {
-                let mut total = *initial;
-                value_iter.for_each(|value| {
-                    total = self.operation.apply(total, *value);
-                });
-                total
-            }
-            None => 0,
+        match self.values.as_slice() {
+            [] => 0,
+            [first, rest @ ..] => self.reduce_values(*first, rest),
         }
+    }
+
+    fn reduce_values(&self, first: u64, rest: &[u64]) -> u64 {
+        let mut total = first;
+        rest.iter().for_each(|value| {
+            total = self.operation.apply(total, *value);
+        });
+        total
     }
 }
 

@@ -42,6 +42,8 @@ fn parse_input(input_path: &str) -> Result<HashMap<GraphNode, Vec<GraphNode>>, S
     Ok(graph)
 }
 
+/// Return a graph node for a string name. If it is a known keyword name we assign a special
+/// graph node, otherwise we just return a [`Node`] with an incrementing ID.
 fn parse_node(node_name: &str, name_id_map: &mut NameIdentifierMap) -> GraphNode {
     match node_name {
         "you" => GraphNode::Start,
@@ -77,6 +79,16 @@ impl NameIdentifierMap {
             }
         }
     }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+enum GraphNode {
+    Start,
+    ServerRack,
+    Dac,
+    Fft,
+    Node(u64),
+    End,
 }
 
 fn count_paths_start_to_end(graph: &HashMap<GraphNode, Vec<GraphNode>>) -> u64 {
@@ -124,14 +136,4 @@ fn count_paths_dfs(
         .entry(start)
         .or_insert(total_paths_to_end);
     total_paths_to_end
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-enum GraphNode {
-    Start,
-    ServerRack,
-    Dac,
-    Fft,
-    Node(u64),
-    End,
 }

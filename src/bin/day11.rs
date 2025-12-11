@@ -19,6 +19,7 @@ fn main() {
 ///   - svr -> ServerRack
 ///   - dac -> Dac
 ///   - fft -> Fft
+///
 /// The rest are short strings, since the value isn't something we care about we instead assign incrementing integer IDs to each to save on space and computation.
 fn parse_input(input_path: &str) -> Result<HashMap<GraphNode, Vec<GraphNode>>, String> {
     let input_text = fs::read_to_string(input_path).map_err(|e| e.to_string())?;

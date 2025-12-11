@@ -1,0 +1,4 @@
+you: aaa bbb
+aaa: ccc
+bbb: ccc
+ccc: out

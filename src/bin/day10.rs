@@ -29,11 +29,14 @@ fn parse_input(input_path: &str) -> Result<Vec<Configuration>, String> {
             let mut parts = l.split_whitespace();
             // TODO parse this properly
             let target = parts.next().unwrap();
+            let mut parts_from_back = parts.rev();
+            let requirements = parts_from_back.next().unwrap();
             let buttons: Result<Vec<HashSet<u64>>, String> =
-                parts.rev().skip(1).map(parse_button).collect();
+                parts_from_back.map(parse_button).collect();
             Ok(Configuration {
                 target: parse_target(target)?,
                 buttons: buttons?,
+                requirements: parse_requirements(requirements)?,
             })
         })
         .collect()
@@ -71,6 +74,21 @@ fn parse_button(string: &str) -> Result<HashSet<u64>, String> {
         }
     }
     Ok(button_indices)
+}
+
+fn parse_requirements(string: &str) -> Result<HashSet<u64>, String> {
+    let mut requirements = HashSet::new();
+    for char in string.chars() {
+        // TODO check properly formed with []
+        match char {
+            digit if digit.is_ascii_digit() => {
+                let index = digit.to_digit(10).ok_or("Failed to parse digit")?;
+                requirements.insert(index as u64);
+            }
+            _ => {}
+        }
+    }
+    Ok(requirements)
 }
 
 fn sum_minimum_set_merges(configs: &[Configuration]) -> Result<u64, String> {
@@ -133,7 +151,7 @@ fn recursive_merge_from(
 struct Configuration {
     target: HashSet<u64>,
     buttons: Vec<HashSet<u64>>,
-    // Remaining set for part 2
+    requirements: HashSet<u64>,
 }
 
 // A small wrapper around a set to keep track of how many sets it has been merged with.
